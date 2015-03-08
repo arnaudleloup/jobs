@@ -1,25 +1,25 @@
 require "json"
 require "Date"
 
-def calcTimePrice(days, pricePerDay)
+def calc_time_price(days, price_per_day)
   price = 0
   if (days > 0)
-    price = pricePerDay
+    price = price_per_day
     days -= 1
   end
     
   if (days > 0)
-    price += [3, days].min * pricePerDay * 0.9  #decrease by 10%
+    price += [3, days].min * price_per_day * 0.9  #decrease by 10%
     days -= 3
   end
   
   if (days > 0)
-    price += [6, days].min * pricePerDay * 0.7 #decrease by 30%
+    price += [6, days].min * price_per_day * 0.7 #decrease by 30%
     days -= 6
   end
   
   if (days > 0)
-    price += days * pricePerDay * 0.5 #decrease by 50%
+    price += days * price_per_day * 0.5 #decrease by 50%
   end
   
   return price
@@ -47,7 +47,7 @@ input_rentals.each do |input_rental|
   end_date = Date.parse input_rental["end_date"]
   days = (end_date - start_date).to_i + 1
   
-  price = calcTimePrice(days, car["price_per_day"])
+  price = calc_time_price(days, car["price_per_day"])
   price += distance * car["price_per_km"]
     
   output_rental = {
