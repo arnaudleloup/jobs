@@ -74,7 +74,7 @@ class ActorDeltaAmountCalc
         delta = rental_delta(before_actions, after_actions)
           
         # check if the rental has changed with the has_delta variable
-        # no driver amount delta does not mean no change
+        # note that no driver amount delta does not mean no change
         # because the data and distance modifications can balance out each other
         has_delta = has_delta(delta)
         modification = @modifications_by_rental_id[rental_id]
