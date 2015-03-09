@@ -48,44 +48,54 @@ def calc_commission(price, days)
   }
 end
 
-def calc
+def calc_option(deductible_reduction, days)
+  value = deductible_reduction ? days * 400 : 0
+  return {
+    :deductible_reduction => value
+  }
 end
 
-data = read("backend/level3/data.json")
+def calc_output(cars, input_rental)
+  car_id = input_rental["car_id"]
+  car = nil
+  cars.each do |c|
+    car = c if c["id"] == car_id
+  end 
+    
+  raise "the car with id=[#{car_id}] does not exist!" if car == nil
+    
+  distance = input_rental["distance"]
+  
+  start_date = Date.parse input_rental["start_date"]
+  end_date = Date.parse input_rental["end_date"]
+  days = (end_date - start_date).to_i + 1
+    
+  price = calc_time_price(days, car["price_per_day"])
+  price += distance * car["price_per_km"]
+    
+  deductible_reduction = calc_option(input_rental["deductible_reduction"], days)
+  commission = calc_commission(price, days)
+    
+  return output_rental = {
+    :id => input_rental["id"],
+    :price => price.to_i,
+    :options => deductible_reduction,
+    :commission => commission
+  }
+end
+
+data = read("backend/level4/data.json")
 
 input_rentals = data["rentals"]
 cars = data["cars"]
 output_rentals = []
   
 input_rentals.each do |input_rental|
-  car_id = input_rental["car_id"]
-  car = nil
-  cars.each do |c|
-    car = c if c["id"] == car_id
-  end 
-  
-  raise "the car with id=[#{car_id}] does not exist!" if car == nil
-  
-  distance = input_rental["distance"]
-
-  start_date = Date.parse input_rental["start_date"]
-  end_date = Date.parse input_rental["end_date"]
-  days = (end_date - start_date).to_i + 1
-  
-  price = calc_time_price(days, car["price_per_day"])
-  price += distance * car["price_per_km"]
-  
-  commission = calc_commission(price, days)
-    
-  output_rental = {
-    :id => input_rental["id"],
-    :price => price.to_i,
-    :commission => commission
-  }
-  output_rentals.push(output_rental)
+  output_rentals.push(calc_output(cars, input_rental))
 end
 
 output = {
   :rentals => output_rentals
 }
-write("backend/level3/output.json", output)
+
+write("backend/level4/output.json", output)

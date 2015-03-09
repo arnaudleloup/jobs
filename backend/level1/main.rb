@@ -1,8 +1,17 @@
 require "json"
 require "Date"
 
-input_file = "backend/level1/data.json"
-data = JSON.parse(IO.read(input_file))
+def read(file)
+  data = JSON.parse(IO.read(file))
+end
+
+def write(file, output)
+  File.open(file, "w") do |f|
+    f.write(JSON.pretty_generate(output))
+  end
+end
+
+data = read("backend/level1/data.json")
 
 input_rentals = data["rentals"]
 cars = data["cars"]
@@ -32,11 +41,7 @@ input_rentals.each do |input_rental|
   output_rentals.push(output_rental)
 end  
 
-output_file = "backend/level1/output.json"
 output = {
   :rentals => output_rentals
 }
-
-File.open(output_file, "w") do |f|
-  f.write(JSON.pretty_generate(output))
-end
+write("backend/level1/output.json", output)

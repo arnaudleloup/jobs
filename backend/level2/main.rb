@@ -1,6 +1,16 @@
 require "json"
 require "Date"
 
+def read(file)
+  data = JSON.parse(IO.read(file))
+end
+
+def write(file, output)
+  File.open(file, "w") do |f|
+    f.write(JSON.pretty_generate(output))
+  end
+end
+
 def calc_time_price(days, price_per_day)
   price = 0
   if (days > 0)
@@ -25,8 +35,7 @@ def calc_time_price(days, price_per_day)
   return price
 end
 
-input_file = "backend/level2/data.json"
-data = JSON.parse(IO.read(input_file))
+data = read("backend/level2/data.json")
 
 input_rentals = data["rentals"]
 cars = data["cars"]
@@ -57,11 +66,8 @@ input_rentals.each do |input_rental|
   output_rentals.push(output_rental)
 end
 
-output_file = "backend/level2/output.json"
 output = {
   :rentals => output_rentals
 }
 
-File.open(output_file, "w") do |f|
-  f.write(JSON.pretty_generate(output))
-end
+write("backend/level2/output.json", output)
