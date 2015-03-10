@@ -32,4 +32,4 @@ output = {
   :rental_modifications => delta_amount
 }
 
-write("backend/level6/output2.json", output)
+write("backend/level6/output.json", output)
